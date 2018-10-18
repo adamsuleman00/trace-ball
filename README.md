@@ -43,8 +43,7 @@ HTML:...
 CSS:...
 Javascript:...
 #### Programming Challenges
-- This project started out in Notepad++, which made debugging and solving issues more difficult.
-- Another issue was to program the enemy NPC to follow the players character. This took some time to solve the problem.
+- Program the enemy NPC to follow the players character. This took some time to solve the problem.
 - Allow the player to have three lives to use up.
 - Implement a restart button, once lives had reached zero.
 #### Constructing And Implementing My Code
