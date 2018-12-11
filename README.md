@@ -12,12 +12,13 @@ Epics
 - The two squares must be able to collide with each other.
 
 User Stories
-- As a player, I would like to see 2 squares and a canvas.
-- As a player, I would like to move the my character with the mouse cursor.
-- As a player, I would like to for the NPC square to follow my character.
-- As a player, I would like for the squares to collide and result in game over.
-- As a player, I would like to manoeuvre my character within the game canvas.
-- As a player, I would like to restart the game, once my lives are gone.
+As a player, I would like to: 
+- see 2 squares and a canvas.
+- move the my character with the mouse cursor.
+- see the NPC square to follow my character.
+- see the squares to collide and result in game over.
+- to manoeuvre my character within the game canvas.
+- restart the game, once my lives are gone.
 
 Non-functional Requirements
 - The players character colour should be green.
