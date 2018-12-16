@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+
+<!--|Traceball First Prototype|!-->
+<!--|Adam Suleman|!-->
+
+<html>
+
+	<head>
+
+		<h1>Trace Ball</h1>
+		<h1>Lives:</h1>
+		<h1 class="playerLives"; id="playerLives";>3</h1>
+		
+		<style>
+
+			h1		{font-family: Calibri; font-size: 50px; color: #000000}
+			canvas	{border: 5px solid black;}
+			body 	{background-color: white}
+		
+		</style>
+		
+	</head>
+	
+	<body>
+		
+		<canvas id = "canvas"></canvas>
+		
+		<script>
+			
+			function mouseMoved(mouseEvent){
+				
+				//store mouse coordinates every time mouse is moved
+				var bounds = canvas.getBoundingClientRect();
+				mouseX = event.clientX - bounds.left
+				mouseY = event.clientY - bounds.top
+			}
+			
+			
+			function spawn(){
+				playerHealth = 100;
+				enemyX = 300;
+				enemyY = 300;
+		
+			}
+			
+			function die(){
+				playerLives -= 1;
+				document.getElementById("playerLives").innerHTML = playerLives;
+				spawn();
+			}
+
+			function run(){
+				
+				//move player
+				playerX = mouseX
+				playerY = mouseY
+				
+				//move enemy a specific fraction closer to the player
+				var differenceX = playerX - enemyX
+				var differenceY = playerY - enemyY
+				
+				enemyX += 0.05 * differenceX
+				enemyY += 0.05 * differenceY
+				
+				//calculate distance between players
+				var distance = Math.sqrt(Math.pow(enemyX - playerX, 2) + Math.pow(enemyY - playerY, 2))
+				
+				//if players intersect, player dies
+				if (distance <= 50){
+					die();
+				}
+				
+				//paint background
+				context.fillStyle='white';
+				context.fillRect(0,0,canvas.width,canvas.height);
+				
+				//paint player
+				context.strokeStyle = "black";
+				context.beginPath();
+				context.arc(playerX,playerY,25,0,2*Math.PI);
+				context.stroke();
+				
+				//paint enemy
+				context.strokeStyle = "red";
+				context.beginPath();
+				context.arc(enemyX,enemyY,25,0,2*Math.PI);
+				context.stroke();
+				
+				window.requestAnimationFrame(run)
+			}
+			
+			var canvas = document.getElementById('canvas'); 
+			var context = canvas.getContext('2d');
+			canvas.width = 640
+			canvas.height = 480
+			
+			var playerHealth;
+			var playerLives = 3;
+			
+			var mouseX = 0;
+			var mouseY = 0;
+			var playerX;
+			var playerY;
+			var enemyX;
+			var enemyY;
+			
+			spawn();
+			window.addEventListener("mousemove", mouseMoved)
+			window.requestAnimationFrame(run)
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+
+<!--|Traceball Final Version|!-->
+<!--|Adam Suleman|!-->
+
+<html>
+
+	<head>
+
+		<center><h1>Trace Ball</h1></center>
+		
+		<h2>Survived:</h2>
+		<h3 class="elapsedTime"; id="elapsedTime";>0.00</h3>
+		
+		<h2>High Score:</h2>
+		<h3 class="highScore"; id="highScore";>0.00</h3>
+		
+		<h2>Health:</h2>
+		<h3 class="playerHealth"; id="playerHealth";>0</h3>
+		
+		<h2>Lives:</h2>
+		<h3 class="playerLives"; id="playerLives";>0</h3>
+		
+		<style>
+		
+			h1	{font-family: Century Gothic, Times New Roman;
+				font-size: 75px;
+				color: #00ff00}
+				
+			h2	{font-family: Century Gothic, Times New Roman;
+				font-size: 50px;
+				line-height: 0px;
+				color: #00ff00}
+			
+			h3	{font-family: Century Gothic, Times New Roman;
+				font-size: 50px;
+				color: #00ff00}
+
+			canvas	
+				{border: 5px solid red;
+				border-radius: 25px;
+				
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+
+				padding: 0;
+				margin: auto;
+				display: block;
+
+				position: absolute;
+				cursor: none;}
+			
+			body {background-color: black}
+		
+		</style>
+	</head>
+	
+	<body>
+		
+		<canvas id = "canvas"></canvas>
+		
+		<script>
+			
+			function mouseMoved(mouseEvent){
+				
+				//store mouse coordinates every time mouse is moved
+				var bounds = canvas.getBoundingClientRect();
+				mouseX = event.clientX - bounds.left
+				mouseY = event.clientY - bounds.top
+			}
+			
+			function movePlayer(){
+
+				playerX = mouseX
+				playerY = mouseY
+			}
+			
+			
+			function checkWallCollision(){
+				
+				//keep player within canvas
+				//correct x and y coordinates if the circle is outside the area
+				
+				if (playerX < playerRadius){
+					playerX = playerRadius;
+				}
+				
+				if (playerY < playerRadius){
+					playerY = playerRadius;
+				}
+				
+				if (playerX > canvas.width - playerRadius){
+					playerX = canvas.width - playerRadius;
+				}
+				
+				if (playerY > canvas.height - playerRadius){
+					playerY = canvas.height - playerRadius;
+				}
+			}
+			
+			function moveEnemy(){
+			
+				//move enemy a specific fraction closer to the player
+				enemyX += enemySpeed * (playerX - enemyX)
+				enemyY += enemySpeed * (playerY - enemyY)
+			}
+			
+			function checkPlayerCollision(){
+				
+				//calculate distance between centres of player and enemy
+				var distance = Math.sqrt(Math.pow(enemyX - playerX, 2) + Math.pow(enemyY - playerY, 2))
+				
+				//if the circles intersect; the player is taking damage and will either lose health or die
+				if (distance <= playerRadius + enemyRadius){
+				
+					//if player is dying:
+					if (playerHealth == 1){
+					
+						if (playerLives == 1){
+						
+							//if lives are up, reset the game
+							initialise();
+							
+						}else{
+							
+							//...otherwise subtract one life
+							playerLives -= 1;
+							document.getElementById("playerLives").innerHTML = playerLives;
+							spawn();
+						}
+					
+					//if player is not dying, reduce player's health and change radius of player and enemy
+					}else{
+					
+						playerHealth -= 1;
+						document.getElementById("playerHealth").innerHTML = playerHealth;
+						playerRadius -= .2;
+						enemyRadius += .5;
+						
+					}
+				}
+			}
+
+			function paintCanvas(){
+			
+				//paint background
+				context.fillStyle='black';
+				context.fillRect(0,0,canvas.width,canvas.height);
+				
+				//paint player (using randomised colour)
+				context.shadowColor = playerColour;
+				context.shadowBlur = 100;
+				context.beginPath();
+				context.arc(playerX, playerY, playerRadius, 0, 2 * Math.PI, false);
+				context.fillStyle = playerColour;
+				context.fill();
+				
+				//paint enemy
+				context.shadowColor = '#ff0000';
+				context.shadowBlur = 100;
+				context.beginPath();
+				context.arc(enemyX, enemyY, enemyRadius, 0, 2 * Math.PI, false);
+				context.fillStyle = '#ff0000';
+				context.fill();
+			}
+			
+			function updateTimer(){
+				
+				//calculate elapsed time in seconds (2 d.p.)
+				var currentTime = new Date().getTime();
+				elapsedTime = ((currentTime - initialTime)/1000);
+				document.getElementById("elapsedTime").innerHTML = elapsedTime.toFixed(2);
+				
+				//check for highscore
+				if (elapsedTime >= highScore){
+					highScore = elapsedTime;
+					document.getElementById("highScore").innerHTML = highScore.toFixed(2);
+				}
+			}
+			
+			function initialise(){
+				
+				//set lives to max
+				playerLives = maxLives;
+				document.getElementById("playerLives").innerHTML = playerLives;
+				
+				//start 'timer' and then spawn players
+				initialTime = new Date().getTime();
+				spawn();
+			}
+			
+			function spawn(){
+				
+				//on every spawn:
+				//reset player health, radius and position
+				playerHealth = maxHealth;
+				document.getElementById("playerHealth").innerHTML = playerHealth;
+				playerRadius = initialPlayerRadius;
+				enemyRadius = initialEnemyRadius;
+				movePlayer();
+				
+				//randomise player colour
+				playerColour = colourArray[Math.floor(Math.random() * colourArray.length)];
+
+				//randomise enemy spawn location
+				if (Math.random() >= 0.5){
+					enemyX = enemyRadius;
+				}else{
+					enemyX = canvas.width - enemyRadius;
+				}
+				
+				if (Math.random() >= 0.5){
+					enemyY = enemyRadius;
+				}else{
+					enemyY = canvas.height - enemyRadius;
+				}
+			}
+			
+			//game loop
+			//
+			//
+			function run(){
+				
+				movePlayer();
+				checkWallCollision();
+				moveEnemy();
+				checkPlayerCollision();
+				paintCanvas();
+				updateTimer();
+				
+				window.requestAnimationFrame(run)
+			}
+			
+			var canvas = document.getElementById('canvas'); 
+			var context = canvas.getContext('2d');
+			
+			//assign constants
+			
+			canvas.width = 800
+			canvas.height = 600
+			
+			var maxHealth = 100;
+			var maxLives = 3;
+			var initialPlayerRadius = 40;
+			var initialEnemyRadius = 60;
+			var enemySpeed = 0.15;
+			var colourArray = ['#00ff00', '#00ffff', '#ffff00', '#9900cc', '#ffffff']
+			
+			//declare variables
+			
+			var playerHealth;
+			var playerLives;
+			var playerColour;
+			var playerRadius;
+			var enemyRadius;
+			
+			var mouseX = initialPlayerRadius;
+			var mouseY = initialPlayerRadius;
+			var playerX;
+			var playerY;
+			var enemyX;
+			var enemyY;
+			
+			var initialTime;
+			var highScore = 0;
+			
+			//add listener to track mouse movement
+			window.addEventListener("mousemove", mouseMoved)
+			
+			//initialise the game and then start the loop
+			initialise();
+			window.requestAnimationFrame(run)
+			
+		</script>
+	</body>
+</html>
