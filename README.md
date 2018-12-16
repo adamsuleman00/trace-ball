@@ -53,6 +53,8 @@ Javascript:...
 
 #### Coding Standards
 Most of the code was to intended to make the program more readable and understandable. This saves a lot of time when reviewing the code and using it.
+
+# Flowchart
 # V. Research
 https://www.w3schools.com/ <-- This provided multiple examples of snippets of code.
 
