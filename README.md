@@ -52,7 +52,35 @@ Javascript:...
 #### Algorithms
 
 #### Coding Standards
-Most of the code was to intended to make the program more readable and understandable. This saves a lot of time when reviewing the code and using it.
+#### Indentations
+One tab per level of indentation.
+Example:
+```
+for x in range (1,10):
+    print (x)
+```
+### Naming
+camelCase with no underscores between words.
+Example:
+```
+ mouseMoved
+```
+### Comments
+Should be above the code, using // to comment.
+Example:
+```
+// this is code   
+code() 
+```
+### Functions
+The braces symbol should always be on a new line.
+Example:
+```
+int main() 
+{
+code
+}
+```
 
 # Flowchart
 # V. Research
