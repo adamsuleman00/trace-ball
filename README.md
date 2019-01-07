@@ -83,6 +83,7 @@ code
 ```
 
 # Flowchart
+![Traceball Flowchart](https://i.imgur.com/KyfBi7i.jpg)
 # V. Research
 https://www.w3schools.com/ <-- This provided multiple examples of snippets of code.
 
